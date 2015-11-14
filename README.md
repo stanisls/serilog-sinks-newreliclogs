@@ -29,7 +29,7 @@ And use the Serilog logging methods to associate named properties with log event
 Log.Error("Failed to log on user {ContactId}", contactId);
 ```
 
-The sink also supports sending Serilog.Metrics to NewRelic althought this requires a custom transaction in NewRelic See [here](https://docs.newrelic.com/docs/agents/net-agent/instrumentation/net-custom-instrumentation) and may turn out to be largely redundant!
+The sink also supports sending Serilog.Metrics to NewRelic although this requires a custom transaction in NewRelic See [here](https://docs.newrelic.com/docs/agents/net-agent/instrumentation/net-custom-instrumentation) and may turn out to be largely redundant!
 
 ```csharp
 // Adding a custom transaction
