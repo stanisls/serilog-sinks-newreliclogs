@@ -37,10 +37,10 @@ namespace Serilog
 
             if (string.IsNullOrEmpty(applicationName))
             {
-                applicationName = ConfigurationManager.AppSettings["NewRelic.AppName"];
+                applicationName = ConfigurationManager.AppSettings[PropertyNameConstants.AppName];
                 if (string.IsNullOrEmpty(applicationName))
                 {
-                    throw new ArgumentException("Must supply an application name eithe as parameter or as appSetting", nameof(applicationName));
+                    throw new ArgumentException("Must supply an application name either as parameter or as appSetting", nameof(applicationName));
                 }
             }
 

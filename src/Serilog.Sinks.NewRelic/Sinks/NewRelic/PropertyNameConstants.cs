@@ -1,4 +1,5 @@
-﻿namespace Serilog.Sinks.NewRelic
+﻿#pragma warning disable 1591
+namespace Serilog.Sinks.NewRelic
 {
     public static class PropertyNameConstants
     {
@@ -10,5 +11,6 @@
         public const string GaugeValue = "GaugeValue";
         public const string GaugeName = "GaugeName";
         public const string MessageTemplate = "MessageTemplate";
+        public const string AppName = "NewRelic.AppName";
     }
 }
