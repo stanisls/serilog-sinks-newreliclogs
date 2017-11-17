@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Events;
@@ -9,7 +8,7 @@ namespace Serilog.Sinks.NewRelic.Sample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -53,7 +52,7 @@ namespace Serilog.Sinks.NewRelic.Sample
 
             // Gauge
             var queue = new Queue<int>();
-            var gauge = logger.GaugeOperation("queue", "item(s)", () => queue.Count());
+            var gauge = logger.GaugeOperation("queue", "item(s)", () => queue.Count);
 
             gauge.Write();
 
