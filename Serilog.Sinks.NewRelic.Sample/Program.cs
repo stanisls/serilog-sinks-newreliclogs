@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Serilog.Enrichers;
 using Serilog.Events;
 
 namespace Serilog.Sinks.NewRelic.Sample
@@ -17,12 +15,13 @@ namespace Serilog.Sinks.NewRelic.Sample
                 .MinimumLevel.Debug()
                 .WriteTo.ColoredConsole(
                     outputTemplate: "{Timestamp:HH:mm:ss} ({ThreadId}) [{Level}] {Message}{NewLine}{Exception}")
-                .WriteTo.Trace()
-                .WriteTo.NewRelic(applicationName: "Serilog.Sinks.NewRelic.Sample")
-                .Enrich.With(new ThreadIdEnricher(), new MachineNameEnricher())
+                .WriteTo.NewRelic()
+                .Enrich.WithMachineName()
+                .Enrich.WithThreadId()
                 .CreateLogger();
 
-            logger.Information("This is a simple information message {Property1}",100);
+            logger.ForContext(PropertyNameConstants.TransactionName, "test::trans").Information("Messaged in a transaction");
+            logger.Information("This is a simple information message {Property1}", 100);
 
             // Adding a custom transaction
 
@@ -53,7 +52,6 @@ namespace Serilog.Sinks.NewRelic.Sample
             }
 
             // Gauge
-
             var queue = new Queue<int>();
             var gauge = logger.GaugeOperation("queue", "item(s)", () => queue.Count());
 
@@ -84,10 +82,9 @@ namespace Serilog.Sinks.NewRelic.Sample
                logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelic.Sample");
             }
 
-            
-
-            System.Console.WriteLine("Press a key to exit.");
-            System.Console.ReadKey(true);
+            logger.Dispose();
+            Console.WriteLine("Press a key to exit.");
+            Console.ReadKey(true);
 
         }
     }
