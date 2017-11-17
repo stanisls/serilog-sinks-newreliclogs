@@ -12,8 +12,13 @@
     <releaseNotes />
     <dependencies>
       <dependency id="Serilog" version="2.0.0" />
-      <dependency id="NewRelic.Api.Agent" version="6.18.139" />
+      <dependency id="NewRelic.Agent.Api" version="6.18.139" />
       <dependency id="Serilog.Sinks.PeriodicBatching" version="2.0.0" />
     </dependencies>
+    <files>
+      <file src="bin\Release\Serilog.Sinks.NewRelic.dll" target="lib\Serilog.Sinks.NewRelic.dll" />
+      <file src="bin\Release\Serilog.Sinks.NewRelic.pdb" target="lib\Serilog.Sinks.NewRelic.pdb" />
+      <file src="bin\Release\Serilog.Sinks.NewRelic.XML" target="lib\Serilog.Sinks.NewRelic.XML" />
+    </files>
   </metadata>
 </package>

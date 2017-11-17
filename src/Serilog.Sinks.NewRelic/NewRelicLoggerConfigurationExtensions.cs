@@ -40,7 +40,7 @@ namespace Serilog
                 applicationName = ConfigurationManager.AppSettings[PropertyNameConstants.AppName];
                 if (string.IsNullOrEmpty(applicationName))
                 {
-                    throw new ArgumentException("Must supply an application name either as parameter or as appSetting", nameof(applicationName));
+                    throw new ArgumentException("Must supply an application name either as a parameter or an appSetting", nameof(applicationName));
                 }
             }
 
