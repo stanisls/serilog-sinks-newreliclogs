@@ -7,7 +7,7 @@
     <ProjectGuid>{F34AE60B-CFD5-464C-BF49-A9D8FA7EE424}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Serilog.Sinks.NewRelic</RootNamespace>
+    <RootNamespace>Serilog</RootNamespace>
     <AssemblyName>Serilog.Sinks.NewRelic</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Serilog.Sinks.NewRelic.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,9 +57,9 @@
   <ItemGroup>
     <Compile Include="NewRelicLoggerConfigurationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LogEventExtensions.cs" />
-    <Compile Include="NewRelicSink.cs" />
-    <Compile Include="PropertyNameConstants.cs" />
+    <Compile Include="Sinks\NewRelic\LogEventExtensions.cs" />
+    <Compile Include="Sinks\NewRelic\NewRelicSink.cs" />
+    <Compile Include="Sinks\NewRelic\PropertyNameConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

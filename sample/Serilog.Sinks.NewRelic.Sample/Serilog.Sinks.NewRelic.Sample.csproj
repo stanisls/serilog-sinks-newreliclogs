@@ -88,7 +88,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Serilog.Sinks.NewRelic\Serilog.Sinks.NewRelic.csproj">
+    <ProjectReference Include="..\..\src\Serilog.Sinks.NewRelic\Serilog.Sinks.NewRelic.csproj">
       <Project>{f34ae60b-cfd5-464c-bf49-a9d8fa7ee424}</Project>
       <Name>Serilog.Sinks.NewRelic</Name>
     </ProjectReference>

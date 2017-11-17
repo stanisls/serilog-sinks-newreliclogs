@@ -19,9 +19,7 @@ namespace Serilog.Sinks.NewRelic
         public const int DefaultBatchPostingLimit = 1000;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(2);
         public IFormatProvider FormatProvider { get; }
-
         
-
         public NewRelicSink(string applicationName, int batchSizeLimit, TimeSpan period, string customEventName, IFormatProvider formatProvider = null)
             : base(batchSizeLimit, period)
         {

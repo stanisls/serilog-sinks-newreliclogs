@@ -3,9 +3,13 @@ using System.Configuration;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Sinks.NewRelic;
 
-namespace Serilog.Sinks.NewRelic
+namespace Serilog
 {
+    /// <summary>
+    /// Extends Serilog configuration to write events to NewRelic
+    /// </summary>
     public static class NewRelicLoggerConfigurationExtensions
     {
         /// <summary>

@@ -5,7 +5,7 @@ using Serilog.Events;
 
 namespace Serilog.Sinks.NewRelic
 {
-    public static class LogEventExtensions
+    internal static class LogEventExtensions
     {
         private static readonly IDictionary<string, string> ReservedWords =
             new Dictionary<string, string>
