@@ -19,9 +19,13 @@ Point the logger to NewRelic:
 
 ```csharp
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.NewRelic(applicationName: "Serilog.Sinks.NewRelic.Sample")
+    .WriteTo.NewRelic(applicationName: "Serilog.Sinks.NewRelic.Sample", customEventName: "LoggedEvents")
     .CreateLogger();
 ```
+
+Both parameters are optional.
+If 'applicationName' is omitted, then the value of the "NewRelic.AppName" appSetting will be used.
+If 'customEventName' is omitted, then the name of the custom transaction is defaulted to "Serilog".
 
 And use the Serilog logging methods to associate named properties with log events:
 
@@ -29,11 +33,12 @@ And use the Serilog logging methods to associate named properties with log event
 Log.Error("Failed to log on user {ContactId}", contactId);
 ```
 
-The sink also supports sending Serilog.Metrics to NewRelic although this requires a custom transaction in NewRelic See [here](https://docs.newrelic.com/docs/agents/net-agent/instrumentation/net-custom-instrumentation) and may turn out to be largely redundant!
+Errors are displayed under the Events-Errors section in NewRelic.
+To view Verbose, Debug, Information and Warning events, go to Insights -> Data Explorer -> Events and select the appropriate custom stransaction (default: "Serilog")
+
+The sink also supports sending [Serilog.Metrics](https://github.com/serilog-metrics/serilog-metrics) to NewRelic although this may turn out to be largely redundant!
 
 ```csharp
-// Adding a custom transaction
-
 using (logger.BeginTimedOperation("Time a thread sleep for 2 seconds."))
 {
     Thread.Sleep(1000);
@@ -44,3 +49,5 @@ using (logger.BeginTimedOperation("Time a thread sleep for 2 seconds."))
     Thread.Sleep(1000);
 }
 ```
+
+The Metrics can be viewed and analysed under Insights -> Data Explorer -> Metrics, and then serching the Custom category for your named metric.
