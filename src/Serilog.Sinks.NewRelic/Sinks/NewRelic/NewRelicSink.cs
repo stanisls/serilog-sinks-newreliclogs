@@ -10,16 +10,12 @@ namespace Serilog.Sinks.NewRelic
 {
     internal class NewRelicSink : PeriodicBatchingSink
     {
-        public string CustomEventName { get; }
-        private LogEventLevel? _minimumAcceptedLevel;
-
-        private static readonly TimeSpan RequiredLevelCheckInterval = TimeSpan.FromMinutes(2);
-        private DateTime _nextRequiredLevelCheckUtc = DateTime.UtcNow.Add(RequiredLevelCheckInterval);
-
         public const int DefaultBatchPostingLimit = 1000;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(2);
-        public IFormatProvider FormatProvider { get; }
-        
+
+        private IFormatProvider FormatProvider { get; }
+        private string CustomEventName { get; }
+
         public NewRelicSink(string applicationName, int batchSizeLimit, TimeSpan period, string customEventName, IFormatProvider formatProvider = null)
             : base(batchSizeLimit, period)
         {
@@ -32,10 +28,6 @@ namespace Serilog.Sinks.NewRelic
 
         protected override Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-            _nextRequiredLevelCheckUtc = DateTime.UtcNow.Add(RequiredLevelCheckInterval);
-
-            _minimumAcceptedLevel = LogEventLevel.Verbose;
-
             return Task.Run(() =>
             {
                 foreach (var logEvent in events)
@@ -146,22 +138,7 @@ namespace Serilog.Sinks.NewRelic
 
             global::NewRelic.Api.Agent.NewRelic.RecordCustomEvent(CustomEventName, properties);
         }
-
-        // The sink must emit at least one event on startup, and the server be
-        // configured to set a specific level, before background level checks will be performed.
-        protected override void OnEmptyBatch()
-        {
-            if (_minimumAcceptedLevel != null && _nextRequiredLevelCheckUtc < DateTime.UtcNow)
-            {
-                EmitBatch(Enumerable.Empty<LogEvent>());
-            }
-        }
-
-        protected override bool CanInclude(LogEvent evt)
-        {
-            return _minimumAcceptedLevel == null || (int) _minimumAcceptedLevel <= (int) evt.Level;
-        }
-
+        
         private IDictionary<string, string> LogEventPropertiesToNewRelicExceptionProperties(LogEvent logEvent)
         {
             var properties = new Dictionary<string, string>();

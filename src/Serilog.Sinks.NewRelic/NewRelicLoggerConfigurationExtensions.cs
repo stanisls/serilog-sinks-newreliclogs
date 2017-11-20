@@ -14,10 +14,11 @@ namespace Serilog
     {
         /// <summary>
         /// </summary>
-        /// <param name="loggerSinkConfiguration"></param>
-        /// <param name="restrictedToMinimumLevel"></param>
-        /// <param name="batchPostingLimit"></param>
-        /// <param name="period"></param>
+        /// <param name="loggerSinkConfiguration">The logger configuration.</param>
+        /// <param name="restrictedToMinimumLevel">The minimum log event level required 
+        /// in order to write an event to the sink.</param>
+        /// <param name="batchPostingLimit">The maximum number of events to post in a single batch.</param>
+        /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="applicationName">Application name in NewRelic. This can be either supplied here or through "NewRelic.AppName" appSettings</param>
         /// <param name="customEventName">The name of a custom event name emitted by logging events Warning, Information, Debug, Verbose. Defaults to "Serilog".</param>
         /// <returns></returns>
