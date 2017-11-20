@@ -26,9 +26,9 @@ namespace Serilog.Sinks.NewRelic
             global::NewRelic.Api.Agent.NewRelic.StartAgent();
         }
 
-        protected override Task EmitBatchAsync(IEnumerable<LogEvent> events)
+        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 foreach (var logEvent in events)
                 {
@@ -74,10 +74,11 @@ namespace Serilog.Sinks.NewRelic
                         EmitCustomEvent(logEvent);
                     }
                 }
-            });
+            })
+            .ConfigureAwait(false);
         }
 
-        private void EmitResponseTimeMetric(LogEvent logEvent)
+        private static void EmitResponseTimeMetric(LogEvent logEvent)
         {
             // Ignore the Beginning Operation
             if (logEvent.Properties.All(x => x.Key != PropertyNameConstants.TimedOperationElapsedInMs))
@@ -96,21 +97,21 @@ namespace Serilog.Sinks.NewRelic
             }
         }
 
-        private void EmitCounterIncrement(LogEvent logEvent)
+        private static void EmitCounterIncrement(LogEvent logEvent)
         {
             var operation = logEvent.Properties.First(x => x.Key == PropertyNameConstants.CounterName);
             var safeOperationString = operation.Value.ToString().ToNewRelicSafeString();
             global::NewRelic.Api.Agent.NewRelic.IncrementCounter(safeOperationString);
         }
 
-        private void EmitMetric(LogEvent logEvent)
+        private static void EmitMetric(LogEvent logEvent)
         {
             var elapsedTime = logEvent.Properties.First(x => x.Key == PropertyNameConstants.GaugeValue);
-            var operation = logEvent.Properties.First(x => x.Key == PropertyNameConstants.GaugeName);
-
+            
             float numeric;
             if (float.TryParse(elapsedTime.Value.ToString(), out numeric))
             {
+                var operation = logEvent.Properties.First(x => x.Key == PropertyNameConstants.GaugeName);
                 var safeOperationString = operation.Value.ToString().ToNewRelicSafeString();
                 global::NewRelic.Api.Agent.NewRelic.RecordMetric(safeOperationString, numeric);
             }
@@ -119,14 +120,14 @@ namespace Serilog.Sinks.NewRelic
         private void EmitError(LogEvent logEvent)
         {
             var properties = LogEventPropertiesToNewRelicExceptionProperties(logEvent);
-            var renderedMessage = logEvent.RenderMessage(FormatProvider).ToNewRelicSafeString();
-
+            
             if (logEvent.Exception != null)
             {
                 global::NewRelic.Api.Agent.NewRelic.NoticeError(logEvent.Exception, properties);
             }
             else
             {
+                var renderedMessage = logEvent.RenderMessage(FormatProvider).ToNewRelicSafeString();
                 global::NewRelic.Api.Agent.NewRelic.NoticeError(renderedMessage, properties);
             }
         }

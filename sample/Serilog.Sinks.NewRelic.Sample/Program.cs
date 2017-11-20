@@ -14,13 +14,20 @@ namespace Serilog.Sinks.NewRelic.Sample
                 .MinimumLevel.Debug()
                 .WriteTo.ColoredConsole(
                     outputTemplate: "{Timestamp:HH:mm:ss} ({ThreadId}) [{Level}] {Message}{NewLine}{Exception}")
-                .WriteTo.NewRelic()
+                .WriteTo.NewRelic(applicationName: "NewRelicSinkDev", customEventName: "SerilogDev")
                 .Enrich.WithMachineName()
                 .Enrich.WithThreadId()
                 .CreateLogger();
 
-            logger.ForContext(PropertyNameConstants.TransactionName, "test::trans").Information("Messaged in a transaction");
-            logger.Information("This is a simple information message {Property1}", 100);
+            logger
+                .ForContext(PropertyNameConstants.TransactionName, "test::trans")
+                .Information("Message in a transaction");
+
+            const string template = "This is a simple {Level} message {Val}";
+            logger.Verbose(template, LogEventLevel.Verbose, (int)LogEventLevel.Verbose);
+            logger.Debug(template, LogEventLevel.Debug, (int)LogEventLevel.Debug);
+            logger.Information(template, LogEventLevel.Information, (int)LogEventLevel.Information);
+            logger.Warning(template, LogEventLevel.Warning, (int)LogEventLevel.Warning);
 
             // Adding a custom transaction
 
@@ -78,13 +85,13 @@ namespace Serilog.Sinks.NewRelic.Sample
             }
             catch (Exception ex)
             {
-               logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelic.Sample");
+                logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelic.Sample");
+                logger.Error("A templated test message notifying of an error. Value {val}", 1);
             }
 
             logger.Dispose();
             Console.WriteLine("Press a key to exit.");
             Console.ReadKey(true);
-
         }
     }
 }
