@@ -11,7 +11,7 @@ namespace Serilog.Sinks.NewRelic.Sample
         static void Main()
         {
             var logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .WriteTo.ColoredConsole(
                     outputTemplate: "{Timestamp:HH:mm:ss} ({ThreadId}) [{Level}] {Message}{NewLine}{Exception}")
                 .WriteTo.NewRelic(applicationName: "NewRelicSinkDev", customEventName: "SerilogDev")
