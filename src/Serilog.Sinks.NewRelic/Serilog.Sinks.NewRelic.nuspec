@@ -2,18 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Serilog.Sinks.NewRelic</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>NewRelic sink for Serilog</title>
     <authors>Stanislav Sokolov</authors>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <iconUrl>http://serilog.net/images/serilog-sink-nuget.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A Serilog sink that writes events to the NewRelic apm application.</description>
-    <releaseNotes>Added internal error-handling and logging to selflog. Removed unused code. Switched to async-await pattern.</releaseNotes>
+    <releaseNotes>Updated Serilog and NewRelig version dependencies.</releaseNotes>
     <dependencies>
-      <dependency id="Serilog" version="2.0.0" />
-      <dependency id="NewRelic.Agent.Api" version="6.18.139" />
-      <dependency id="Serilog.Sinks.PeriodicBatching" version="2.0.0" />
+      <dependency id="Serilog" version="2.8.0" />
+      <dependency id="NewRelic.Agent.Api" version="8.19.353" />
+      <dependency id="Serilog.Sinks.PeriodicBatching" version="2.2.0" />
     </dependencies>
   </metadata>
   <files>
