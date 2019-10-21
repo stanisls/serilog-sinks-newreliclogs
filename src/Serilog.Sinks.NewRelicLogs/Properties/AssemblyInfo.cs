@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Serilog.Sinks.NewRelic.Sample")]
+[assembly: AssemblyTitle("Serilog.Sinks.NewRelicLogs")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Serilog.Sinks.NewRelic.Sample")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("Serilog.Sinks.NewRelicLogs")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("569471cf-2fb0-434b-9f8e-58784efb6f78")]
+[assembly: Guid("f34ae60b-cfd5-464c-bf49-a9d8fa7ee424")]
 
 // Version information for an assembly consists of the following four values:
 //

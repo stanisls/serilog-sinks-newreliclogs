@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Events;
 
-namespace Serilog.Sinks.NewRelic.Sample
+namespace Serilog.Sinks.NewRelicLogs.Sample
 {
     class Program
     {
@@ -14,13 +14,16 @@ namespace Serilog.Sinks.NewRelic.Sample
                 .MinimumLevel.Verbose()
                 .WriteTo.ColoredConsole(
                     outputTemplate: "{Timestamp:HH:mm:ss} ({ThreadId}) [{Level}] {Message}{NewLine}{Exception}")
-                .WriteTo.NewRelic(applicationName: "NewRelicSinkDev", customEventName: "SerilogDev")
+                .WriteTo.NewRelicLogs(
+                                      applicationName: "NewRelicSinkDev", 
+                                      licenseKey: ""
+                                      )
                 .Enrich.WithMachineName()
                 .Enrich.WithThreadId()
                 .CreateLogger();
 
             logger
-                .ForContext(PropertyNameConstants.TransactionName, "test::trans")
+                .ForContext("SampleTransaction", "trans1")
                 .Information("Message in a transaction");
 
             const string template = "This is a simple {Level} message {Val}";
@@ -85,7 +88,7 @@ namespace Serilog.Sinks.NewRelic.Sample
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelic.Sample");
+                logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelicLogs.Sample");
                 logger.Error("A templated test message notifying of an error. Value {val}", 1);
             }
 

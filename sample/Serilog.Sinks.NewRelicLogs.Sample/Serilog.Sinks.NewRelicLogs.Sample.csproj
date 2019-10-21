@@ -7,8 +7,8 @@
     <ProjectGuid>{569471CF-2FB0-434B-9F8E-58784EFB6F78}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Serilog.Sinks.NewRelic.Sample</RootNamespace>
-    <AssemblyName>Serilog.Sinks.NewRelic.Sample</AssemblyName>
+    <RootNamespace>Serilog.Sinks.NewRelicLogs.Sample</RootNamespace>
+    <AssemblyName>Serilog.Sinks.NewRelicLogs.Sample</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,14 +36,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NewRelic.Api.Agent, Version=8.19.353.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NewRelic.Agent.Api.8.19.353\lib\net45\NewRelic.Api.Agent.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Serilog.2.8.0\lib\net46\Serilog.dll</HintPath>
+      <HintPath>..\..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
     <Reference Include="Serilog.Enrichers.Context, Version=4.2.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Serilog.Enrichers.Context.4.2.0\lib\net452\Serilog.Enrichers.Context.dll</HintPath>
@@ -86,7 +83,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Serilog.Sinks.NewRelic\Serilog.Sinks.NewRelic.csproj">
+    <ProjectReference Include="..\..\src\Serilog.Sinks.NewRelicLogs\Serilog.Sinks.NewRelicLogs.csproj">
       <Project>{f34ae60b-cfd5-464c-bf49-a9d8fa7ee424}</Project>
       <Name>Serilog.Sinks.NewRelic</Name>
     </ProjectReference>

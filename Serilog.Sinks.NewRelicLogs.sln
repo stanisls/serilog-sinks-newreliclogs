@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.NewRelic", "src\Serilog.Sinks.NewRelic\Serilog.Sinks.NewRelic.csproj", "{F34AE60B-CFD5-464C-BF49-A9D8FA7EE424}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.NewRelicLogs", "src\Serilog.Sinks.NewRelicLogs\Serilog.Sinks.NewRelicLogs.csproj", "{F34AE60B-CFD5-464C-BF49-A9D8FA7EE424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.NewRelic.Sample", "sample\Serilog.Sinks.NewRelic.Sample\Serilog.Sinks.NewRelic.Sample.csproj", "{569471CF-2FB0-434B-9F8E-58784EFB6F78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.NewRelicLogs.Sample", "sample\Serilog.Sinks.NewRelicLogs.Sample\Serilog.Sinks.NewRelicLogs.Sample.csproj", "{569471CF-2FB0-434B-9F8E-58784EFB6F78}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{30EC5940-9B2D-485B-B854-F978C4B8BD5A}"
 	ProjectSection(SolutionItems) = preProject
