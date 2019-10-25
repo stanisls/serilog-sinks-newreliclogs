@@ -7,9 +7,12 @@
     <authors>Stanislav Sokolov</authors>
     <license type="expression">Apache-2.0</license>
     <icon>serilog-sink-nuget.png</icon>
+    <projectUrl>https://github.com/stanisls/serilog-sinks-newreliclogs</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A Serilog sink that writes events to NewRelic Logs.</description>
+    <repository type="git" url="https://github.com/stanisls/serilog-sinks-newreliclogs.git" />
+    <description>A Serilog sink that writes events to version 1 of the NewRelic Logs API.</description>
     <releaseNotes>This is a mirror of Serilog.Sinks.NewRelic rewritten to send logs to NewRelic Logs application.</releaseNotes>
+    <tags>serilog,logging,newrelic,log</tags>
     <dependencies>
       <group targetFramework="net45">
         <dependency id="Serilog" version="2.9.0" />
