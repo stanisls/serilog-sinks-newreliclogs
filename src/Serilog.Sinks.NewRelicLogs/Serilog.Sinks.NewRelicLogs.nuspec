@@ -5,20 +5,23 @@
     <version>1.0.0</version>
     <title>NewRelic Logs sink for Serilog</title>
     <authors>Stanislav Sokolov</authors>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <iconUrl>http://serilog.net/images/serilog-sink-nuget.png</iconUrl>
+    <license type="expression">Apache-2.0</license>
+    <icon>serilog-sink-nuget.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A Serilog sink that writes events to NewRelic Logs.</description>
     <releaseNotes>This is a mirror of Serilog.Sinks.NewRelic rewritten to send logs to NewRelic Logs application.</releaseNotes>
     <dependencies>
-      <dependency id="Serilog" version="2.9.0" />
-      <dependency id="Serilog.Sinks.PeriodicBatching" version="2.2.0" />
-      <dependency id="Newtonsoft.Json" version="12.0.2" />
+      <group targetFramework="net45">
+        <dependency id="Serilog" version="2.9.0" />
+        <dependency id="Serilog.Sinks.PeriodicBatching" version="2.2.0" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" />
+      </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.dll" target="lib\Serilog.Sinks.NewRelicLogs.dll" />
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.pdb" target="lib\Serilog.Sinks.NewRelicLogs.pdb" />
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.XML" target="lib\Serilog.Sinks.NewRelicLogs.XML" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.dll" target="lib\net45\Serilog.Sinks.NewRelicLogs.dll" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.pdb" target="lib\net45\Serilog.Sinks.NewRelicLogs.pdb" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.XML" target="lib\net45\Serilog.Sinks.NewRelicLogs.XML" />
+    <file src="serilog-sink-nuget.png" target="" />
   </files>
 </package>
