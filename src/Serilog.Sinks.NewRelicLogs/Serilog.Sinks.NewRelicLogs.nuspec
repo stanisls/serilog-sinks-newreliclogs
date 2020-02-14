@@ -14,7 +14,7 @@
     <releaseNotes>Added unrolling of logs-in-context NewRelic metadata.</releaseNotes>
     <tags>serilog,logging,newrelic,log</tags>
     <dependencies>
-      <group targetFramework="net45">
+      <group targetFramework="net452">
         <dependency id="Serilog" version="2.9.0" />
         <dependency id="Serilog.Sinks.PeriodicBatching" version="2.2.0" />
         <dependency id="Newtonsoft.Json" version="12.0.3" />
@@ -22,9 +22,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.dll" target="lib\net45\Serilog.Sinks.NewRelicLogs.dll" />
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.pdb" target="lib\net45\Serilog.Sinks.NewRelicLogs.pdb" />
-    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.XML" target="lib\net45\Serilog.Sinks.NewRelicLogs.XML" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.dll" target="lib\net452\Serilog.Sinks.NewRelicLogs.dll" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.pdb" target="lib\net452\Serilog.Sinks.NewRelicLogs.pdb" />
+    <file src="bin\Release\Serilog.Sinks.NewRelicLogs.XML" target="lib\net452\Serilog.Sinks.NewRelicLogs.XML" />
     <file src="serilog-sink-nuget.png" target="" />
   </files>
 </package>
