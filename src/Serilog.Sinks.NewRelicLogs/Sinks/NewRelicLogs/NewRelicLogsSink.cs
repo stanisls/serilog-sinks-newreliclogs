@@ -70,7 +70,8 @@ namespace Serilog.Sinks.NewRelicLogs
                     }
                     else
                     {
-                        logEntry.attributes.Add(prop.Key, prop.Value.ToString());
+                        logEntry.attributes.Add(ClearEnclosingQuotes(prop.Key),
+                                                ClearEnclosingQuotes(prop.Value.ToString()));
                     }
                 }
 
@@ -93,7 +94,7 @@ namespace Serilog.Sinks.NewRelicLogs
                 .ConfigureAwait(false);
         }
 
-        private void UnrollNewRelicDistributedTraceAttributes(dynamic logEntry, LogEventPropertyValue propValue)
+        private static void UnrollNewRelicDistributedTraceAttributes(dynamic logEntry, LogEventPropertyValue propValue)
         {
             if (!(propValue is DictionaryValue newRelicProperties))
             {
@@ -102,7 +103,8 @@ namespace Serilog.Sinks.NewRelicLogs
 
             foreach (var newRelicProperty in newRelicProperties.Elements)
             {
-                logEntry.attributes.Add(newRelicProperty.Key.ToString(), newRelicProperty.Value.ToString());
+                logEntry.attributes.Add(ClearEnclosingQuotes(newRelicProperty.Key.ToString()),
+                                        ClearEnclosingQuotes(newRelicProperty.Value.ToString()));
             }
         }
 
@@ -166,7 +168,7 @@ namespace Serilog.Sinks.NewRelicLogs
             }
         }
 
-        private string Serialize(List<object> blob, int eventCount)
+        private static string Serialize(List<object> blob, int eventCount)
         {
             var serializer = new JsonSerializer();
 
@@ -194,6 +196,23 @@ namespace Serilog.Sinks.NewRelicLogs
             if (date == DateTime.MinValue) return 0;
 
             return (long) (date - epoch).TotalMilliseconds;
+        }
+
+        private static string ClearEnclosingQuotes(string val)
+        {
+            if (val.Length > 2 && val.StartsWith(@"""") && val.EndsWith(@"""")
+             || val.Length > 4 && val.StartsWith(@"\""") && val.EndsWith(@"\"""))
+            {
+                var data = new StringBuilder(val);
+                data.Replace(@"""", "", 0, 1);
+                data.Replace(@"""", "", data.Length - 1, 1);
+                data.Replace(@"\""", "", 0, 2);
+                data.Replace(@"\""", "", data.Length - 2, 2);
+
+                return data.ToString();
+            }
+
+            return val;
         }
     }
 }

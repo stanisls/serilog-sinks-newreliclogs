@@ -83,6 +83,9 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
             counter.Increment();
             counter.Decrement();
 
+            //Handling of quotes
+            logger.ForContext(@"""QuotedAttribute""", @"""Quoted value""").Debug("Enclosing quotes removed");
+
             // Throw Exception
             try
             {
