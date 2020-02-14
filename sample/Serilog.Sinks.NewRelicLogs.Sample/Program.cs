@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using NewRelic.LogEnrichers.Serilog;
 using Serilog.Events;
 
 namespace Serilog.Sinks.NewRelicLogs.Sample
@@ -15,13 +16,14 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
                 .WriteTo.ColoredConsole(
                     outputTemplate: "{Timestamp:HH:mm:ss} ({ThreadId}) [{Level}] {Message}{NewLine}{Exception}")
                 .WriteTo.NewRelicLogs(
-                                      applicationName: "NewRelicSinkDev", 
+                                      applicationName: "NewRelicLogsSinkDev", 
                                       licenseKey: ""
                                       )
                 .Enrich.WithMachineName()
                 .Enrich.WithThreadId()
+                .Enrich.WithNewRelicLogsInContext()
                 .CreateLogger();
-
+            
             logger
                 .ForContext("SampleTransaction", "trans1")
                 .Information("Message in a transaction");

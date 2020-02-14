@@ -25,7 +25,9 @@ The available parameters are:
 * 'insertKey' is New Relic Insert API key. Either 'licenseKey' or 'insertKey' must be supplied.
 
 The events are submitted to NewRelic Logs in batches, and the sink is derived from [PeriodicBatchingSink](https://github.com/serilog/serilog-sinks-periodicbatching).
-It therefore supports 'batchSizeLimit' and 'period' parameters of its base. The batches are formatted using NewRelic Logs [detailed JSON body](https://docs.newrelic.com/docs/logs/new-relic-logs/log-api/introduction-log-api#json-content) and are transmitted compressed.
+It therefore supports 'batchSizeLimit' and 'period' parameters of its base with the default values of 1000 items and 2 seconds respectively.
+
+The batches are formatted using NewRelic Logs [detailed JSON body](https://docs.newrelic.com/docs/logs/new-relic-logs/log-api/introduction-log-api#json-content) and are transmitted compressed.
 
 All properties along with the rendered message will be emitted to NewRelic Logs.
 This sink adds four additional properties:

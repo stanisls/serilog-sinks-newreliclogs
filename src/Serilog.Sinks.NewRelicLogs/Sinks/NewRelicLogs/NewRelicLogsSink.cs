@@ -64,7 +64,14 @@ namespace Serilog.Sinks.NewRelicLogs
                 };
                 foreach (var prop in logEvent.Properties)
                 {
-                    logEntry.attributes.Add(prop.Key, prop.Value.ToString());
+                    if (prop.Key.Equals("newrelic.linkingmetadata", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        UnrollNewRelicDistributedTraceAttributes(logEntry, prop.Value);
+                    }
+                    else
+                    {
+                        logEntry.attributes.Add(prop.Key, prop.Value.ToString());
+                    }
                 }
 
                 detailedLogObject.logs.Add(logEntry);
@@ -82,9 +89,21 @@ namespace Serilog.Sinks.NewRelicLogs
                     {
                         SelfLog.WriteLine("Event batch could not be sent to NewRelic Logs and was dropped: {0}", ex);
                     }
-
                 })
                 .ConfigureAwait(false);
+        }
+
+        private void UnrollNewRelicDistributedTraceAttributes(dynamic logEntry, LogEventPropertyValue propValue)
+        {
+            if (!(propValue is DictionaryValue newRelicProperties))
+            {
+                return;
+            }
+
+            foreach (var newRelicProperty in newRelicProperties.Elements)
+            {
+                logEntry.attributes.Add(newRelicProperty.Key.ToString(), newRelicProperty.Value.ToString());
+            }
         }
 
         private void SendToNewRelicLogs(string body)
@@ -174,7 +193,7 @@ namespace Serilog.Sinks.NewRelicLogs
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
             if (date == DateTime.MinValue) return 0;
 
-            return (long)(date - epoch).TotalMilliseconds;
+            return (long) (date - epoch).TotalMilliseconds;
         }
     }
 }
