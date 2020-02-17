@@ -21,8 +21,8 @@ namespace Serilog
         /// <param name="insertKey">New Relic Insert API key. Either "licenseKey" or "insertKey" must be provided.</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required 
         ///     in order to write an event to the sink.</param>
-        /// <param name="batchPostingLimit">The maximum number of events to include in a single batch.</param>
-        /// <param name="period">The time to wait between checking for event batches.</param>
+        /// <param name="batchSizeLimit">The maximum number of events to include in a single batch. Default is 1000 entries.</param>
+        /// <param name="period">The time to wait between checking for event batches. TimeSpan with a default value of 2 seconds.</param>
         /// <returns></returns>
         public static LoggerConfiguration NewRelicLogs(
             this LoggerSinkConfiguration loggerSinkConfiguration,
@@ -31,7 +31,7 @@ namespace Serilog
             string licenseKey = null,
             string insertKey = null,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            int batchPostingLimit = NewRelicLogsSink.DefaultBatchPostingLimit,
+            int batchSizeLimit = NewRelicLogsSink.DefaultBatchSizeLimit,
             TimeSpan? period = null
             )
         {
@@ -61,7 +61,7 @@ namespace Serilog
 
             var defaultPeriod = period ?? NewRelicLogsSink.DefaultPeriod;
 
-            ILogEventSink sink = new NewRelicLogsSink(endpointUrl, applicationName, licenseKey, insertKey, batchPostingLimit, defaultPeriod);
+            ILogEventSink sink = new NewRelicLogsSink(endpointUrl, applicationName, licenseKey, insertKey, batchSizeLimit, defaultPeriod);
 
             return loggerSinkConfiguration.Sink(sink, restrictedToMinimumLevel);
         }

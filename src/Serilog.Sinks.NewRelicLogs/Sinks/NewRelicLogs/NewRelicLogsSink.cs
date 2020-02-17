@@ -15,7 +15,7 @@ namespace Serilog.Sinks.NewRelicLogs
 {
     internal class NewRelicLogsSink : PeriodicBatchingSink
     {
-        public const int DefaultBatchPostingLimit = 1000;
+        public const int DefaultBatchSizeLimit = 1000;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(2);
 
         public string EndpointUrl { get; }
@@ -52,30 +52,37 @@ namespace Serilog.Sinks.NewRelicLogs
             var eventList = events.ToList();
             foreach (var logEvent in eventList)
             {
-                dynamic logEntry = new
+                try
                 {
-                    timestamp = UnixTimestampFromDateTime(logEvent.Timestamp.UtcDateTime),
-                    message = logEvent.RenderMessage(FormatProvider),
-                    attributes = new Dictionary<string, string>
+                    dynamic logEntry = new
                     {
-                        { "level", logEvent.Level.ToString() },
-                        { "stack_trace", logEvent.Exception?.StackTrace ?? "" },
-                    }
-                };
-                foreach (var prop in logEvent.Properties)
-                {
-                    if (prop.Key.Equals("newrelic.linkingmetadata", StringComparison.InvariantCultureIgnoreCase))
+                        timestamp = UnixTimestampFromDateTime(logEvent.Timestamp.UtcDateTime),
+                        message = logEvent.RenderMessage(FormatProvider),
+                        attributes = new Dictionary<string, string>
+                        {
+                            { "level", logEvent.Level.ToString() },
+                            { "stack_trace", logEvent.Exception?.StackTrace ?? "" },
+                        }
+                    };
+                    foreach (var prop in logEvent.Properties)
                     {
-                        UnrollNewRelicDistributedTraceAttributes(logEntry, prop.Value);
+                        if (prop.Key.Equals("newrelic.linkingmetadata", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            UnrollNewRelicDistributedTraceAttributes(logEntry, prop.Value);
+                        }
+                        else
+                        {
+                            logEntry.attributes.Add(ClearEnclosingQuotes(prop.Key),
+                                                    ClearEnclosingQuotes(prop.Value));
+                        }
                     }
-                    else
-                    {
-                        logEntry.attributes.Add(ClearEnclosingQuotes(prop.Key),
-                                                ClearEnclosingQuotes(prop.Value.ToString()));
-                    }
-                }
 
-                detailedLogObject.logs.Add(logEntry);
+                    detailedLogObject.logs.Add(logEntry);
+                }
+                catch (Exception ex)
+                {
+                    SelfLog.WriteLine("Log event could not be formatted and was dropped: {0} {1}", ex.Message, ex.StackTrace);
+                }
             }
 
             var body = Serialize(new List<object> { detailedLogObject }, eventList.Count);
@@ -88,7 +95,7 @@ namespace Serilog.Sinks.NewRelicLogs
                     }
                     catch (Exception ex)
                     {
-                        SelfLog.WriteLine("Event batch could not be sent to NewRelic Logs and was dropped: {0}", ex);
+                        SelfLog.WriteLine("Event batch could not be sent to NewRelic Logs and was dropped: {0} {1}", ex.Message, ex.StackTrace);
                     }
                 })
                 .ConfigureAwait(false);
@@ -104,7 +111,7 @@ namespace Serilog.Sinks.NewRelicLogs
             foreach (var newRelicProperty in newRelicProperties.Elements)
             {
                 logEntry.attributes.Add(ClearEnclosingQuotes(newRelicProperty.Key.ToString()),
-                                        ClearEnclosingQuotes(newRelicProperty.Value.ToString()));
+                                        ClearEnclosingQuotes(newRelicProperty.Value));
             }
         }
 
@@ -146,9 +153,9 @@ namespace Serilog.Sinks.NewRelicLogs
                     zippedRequestStream.Close();
                 }
             }
-            catch (WebException e)
+            catch (WebException ex)
             {
-                SelfLog.WriteLine("Failed to create WebRequest to NewRelic Logs: {0}", e);
+                SelfLog.WriteLine("Failed to create WebRequest to NewRelic Logs: {0} {1}", ex.Message, ex.StackTrace);
                 return;
             }
 
@@ -162,9 +169,9 @@ namespace Serilog.Sinks.NewRelicLogs
                     }
                 }
             }
-            catch (WebException e)
+            catch (WebException ex)
             {
-                SelfLog.WriteLine("Failed to parse response from NewRelic Logs: {0}", e);
+                SelfLog.WriteLine("Failed to parse response from NewRelic Logs: {0} {1}", ex.Message, ex.StackTrace);
             }
         }
 
@@ -190,7 +197,7 @@ namespace Serilog.Sinks.NewRelicLogs
         /// Converts from DateTime to Unix time. Conversion is timezone-agnostic.
         /// </summary>
         /// <param name="date"></param>
-        public long UnixTimestampFromDateTime(DateTime date)
+        private static long UnixTimestampFromDateTime(DateTime date)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
             if (date == DateTime.MinValue) return 0;
@@ -198,16 +205,26 @@ namespace Serilog.Sinks.NewRelicLogs
             return (long) (date - epoch).TotalMilliseconds;
         }
 
+        private static string ClearEnclosingQuotes(LogEventPropertyValue val)
+        {
+            if (val is ScalarValue scalar)
+            {
+                if (scalar.Value is string stringValue)
+                {
+                    return ClearEnclosingQuotes(stringValue);
+                }
+            }
+
+            return ClearEnclosingQuotes(val.ToString());
+        }
+
         private static string ClearEnclosingQuotes(string val)
         {
-            if (val.Length > 2 && val.StartsWith(@"""") && val.EndsWith(@"""")
-             || val.Length > 4 && val.StartsWith(@"\""") && val.EndsWith(@"\"""))
+            if (val.Length > 2 && val.StartsWith(@"""") && val.EndsWith(@""""))
             {
                 var data = new StringBuilder(val);
-                data.Replace(@"""", "", 0, 1);
                 data.Replace(@"""", "", data.Length - 1, 1);
-                data.Replace(@"\""", "", 0, 2);
-                data.Replace(@"\""", "", data.Length - 2, 2);
+                data.Replace(@"""", "", 0, 1);
 
                 return data.ToString();
             }

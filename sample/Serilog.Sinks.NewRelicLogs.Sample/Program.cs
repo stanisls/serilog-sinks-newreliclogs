@@ -84,7 +84,15 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
             counter.Decrement();
 
             //Handling of quotes
-            logger.ForContext(@"""QuotedAttribute""", @"""Quoted value""").Debug("Enclosing quotes removed");
+            const string character = "/";
+            const string quotedValue = "Quoted value";
+            const string doubleQuotedValue = @"""Quoted value""";
+
+            logger
+                .ForContext(@"""QuotedAttribute""", quotedValue, destructureObjects: true)
+                .ForContext(@"""DoubleQuotedAttribute""", doubleQuotedValue, destructureObjects: true)
+                .ForContext(@"""QuotedSingleChar""", character, destructureObjects: true)
+                .Debug("Enclosing quotes removed");
 
             // Throw Exception
             try
