@@ -72,8 +72,7 @@ namespace Serilog.Sinks.NewRelicLogs
                         }
                         else
                         {
-                            logEntry.attributes.Add(ClearEnclosingQuotes(prop.Key),
-                                                    ClearEnclosingQuotes(prop.Value));
+                            logEntry.attributes.Add(prop.Key, HandleSerilogValue(prop.Value));
                         }
                     }
 
@@ -110,8 +109,7 @@ namespace Serilog.Sinks.NewRelicLogs
 
             foreach (var newRelicProperty in newRelicProperties.Elements)
             {
-                logEntry.attributes.Add(ClearEnclosingQuotes(newRelicProperty.Key.ToString()),
-                                        ClearEnclosingQuotes(newRelicProperty.Value));
+                logEntry.attributes.Add(HandleSerilogValue(newRelicProperty.Key), HandleSerilogValue(newRelicProperty.Value));
             }
         }
 
@@ -205,31 +203,17 @@ namespace Serilog.Sinks.NewRelicLogs
             return (long) (date - epoch).TotalMilliseconds;
         }
 
-        private static string ClearEnclosingQuotes(LogEventPropertyValue val)
+        private static string HandleSerilogValue(LogEventPropertyValue val)
         {
             if (val is ScalarValue scalar)
             {
                 if (scalar.Value is string stringValue)
                 {
-                    return ClearEnclosingQuotes(stringValue);
+                    return stringValue;
                 }
             }
 
-            return ClearEnclosingQuotes(val.ToString());
-        }
-
-        private static string ClearEnclosingQuotes(string val)
-        {
-            if (val.Length > 2 && val.StartsWith(@"""") && val.EndsWith(@""""))
-            {
-                var data = new StringBuilder(val);
-                data.Replace(@"""", "", data.Length - 1, 1);
-                data.Replace(@"""", "", 0, 1);
-
-                return data.ToString();
-            }
-
-            return val;
+            return val.ToString();
         }
     }
 }
