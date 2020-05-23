@@ -1,3 +1,7 @@
+using Newtonsoft.Json;
+using Serilog.Debugging;
+using Serilog.Events;
+using Serilog.Sinks.PeriodicBatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,10 +10,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Serilog.Debugging;
-using Serilog.Events;
-using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog.Sinks.NewRelicLogs
 {
@@ -36,47 +36,38 @@ namespace Serilog.Sinks.NewRelicLogs
 
         protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events)
         {
-            dynamic detailedLogObject = new
-            {
-                common = new
-                {
-                    attributes = new Dictionary<string, string>
-                    {
-                        { "application", ApplicationName }
-                    }
-                },
-
-                logs = new List<object>()
-            };
+            var detailedLog = new NewRelicLogPayload();
+            detailedLog.common.attributes.Add("application", ApplicationName);
 
             var eventList = events.ToList();
             foreach (var logEvent in eventList)
             {
                 try
                 {
-                    dynamic logEntry = new
+                    var logItem = new NewRelicLogItem
                     {
                         timestamp = UnixTimestampFromDateTime(logEvent.Timestamp.UtcDateTime),
                         message = logEvent.RenderMessage(FormatProvider),
-                        attributes = new Dictionary<string, string>
+                        attributes = new Dictionary<string, object>
                         {
                             { "level", logEvent.Level.ToString() },
                             { "stack_trace", logEvent.Exception?.StackTrace ?? "" },
                         }
                     };
+
                     foreach (var prop in logEvent.Properties)
                     {
                         if (prop.Key.Equals("newrelic.linkingmetadata", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            UnrollNewRelicDistributedTraceAttributes(logEntry, prop.Value);
+                            UnrollNewRelicDistributedTraceAttributes(logItem, prop.Value);
                         }
                         else
                         {
-                            logEntry.attributes.Add(prop.Key, HandleSerilogValue(prop.Value));
+                            logItem.attributes.Add(prop.Key, NewRelicPropertyFormatter.Simplify(prop.Value));
                         }
                     }
 
-                    detailedLogObject.logs.Add(logEntry);
+                    detailedLog.logs.Add(logItem);
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +75,7 @@ namespace Serilog.Sinks.NewRelicLogs
                 }
             }
 
-            var body = Serialize(new List<object> { detailedLogObject }, eventList.Count);
+            var body = Serialize(new List<object> { detailedLog }, eventList.Count);
 
             await Task.Run(() =>
                 {
@@ -100,7 +91,7 @@ namespace Serilog.Sinks.NewRelicLogs
                 .ConfigureAwait(false);
         }
 
-        private static void UnrollNewRelicDistributedTraceAttributes(dynamic logEntry, LogEventPropertyValue propValue)
+        private static void UnrollNewRelicDistributedTraceAttributes(NewRelicLogItem logItem, LogEventPropertyValue propValue)
         {
             if (!(propValue is DictionaryValue newRelicProperties))
             {
@@ -109,7 +100,9 @@ namespace Serilog.Sinks.NewRelicLogs
 
             foreach (var newRelicProperty in newRelicProperties.Elements)
             {
-                logEntry.attributes.Add(HandleSerilogValue(newRelicProperty.Key), HandleSerilogValue(newRelicProperty.Value));
+                logItem.attributes.Add(
+                    NewRelicPropertyFormatter.Simplify(newRelicProperty.Key).ToString(),
+                    NewRelicPropertyFormatter.Simplify(newRelicProperty.Value));
             }
         }
 
@@ -201,19 +194,6 @@ namespace Serilog.Sinks.NewRelicLogs
             if (date == DateTime.MinValue) return 0;
 
             return (long) (date - epoch).TotalMilliseconds;
-        }
-
-        private static string HandleSerilogValue(LogEventPropertyValue val)
-        {
-            if (val is ScalarValue scalar)
-            {
-                if (scalar.Value is string stringValue)
-                {
-                    return stringValue;
-                }
-            }
-
-            return val.ToString();
         }
     }
 }
