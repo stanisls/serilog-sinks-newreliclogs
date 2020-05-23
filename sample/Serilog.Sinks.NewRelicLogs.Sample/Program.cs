@@ -38,10 +38,10 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
 
             // Adding a custom transaction
 
-            using (Log.Logger.BeginTimedOperation("Time a thread sleep for 2 seconds."))
+            using (logger.BeginTimedOperation("Time a thread sleep for 2 seconds."))
             {
                 Thread.Sleep(1000);
-                using (Log.Logger.BeginTimedOperation("And inside we try a Task.Delay for 2 seconds."))
+                using (logger.BeginTimedOperation("And inside we try a Task.Delay for 2 seconds."))
                 {
                     Task.Delay(2000).Wait();
                 }
