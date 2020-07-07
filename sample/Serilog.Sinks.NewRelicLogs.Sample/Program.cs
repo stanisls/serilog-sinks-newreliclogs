@@ -1,9 +1,10 @@
-﻿using System;
+﻿using NewRelic.LogEnrichers.Serilog;
+using Serilog.Context;
+using Serilog.Events;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NewRelic.LogEnrichers.Serilog;
-using Serilog.Events;
 
 namespace Serilog.Sinks.NewRelicLogs.Sample
 {
@@ -22,12 +23,13 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
                 .Enrich.WithMachineName()
                 .Enrich.WithThreadId()
                 .Enrich.WithNewRelicLogsInContext()
+                .Enrich.FromLogContext()
                 .CreateLogger();
-            
+
             logger
                 .ForContext("SampleTransaction", "trans1")
                 .Information("Message in a transaction");
-
+               
             const string template = "This is a simple {Level} message {Val}";
             logger.Verbose(template, LogEventLevel.Verbose, (int)LogEventLevel.Verbose);
             logger.Debug(template, LogEventLevel.Debug, (int)LogEventLevel.Debug);
@@ -92,11 +94,35 @@ namespace Serilog.Sinks.NewRelicLogs.Sample
             {
                 logger.Error(ex, "Error whilst testing the Serilog.Sinks.NewRelicLogs.Sample");
                 logger.Error("A templated test message notifying of an error. Value {val}", 1);
+
+                // adding complex object
+                LogContext.PushProperty("ComplexDictionary", GetComplexDictionary());
+                logger.Error("Test with complex object and dictionary");
             }
 
             logger.Dispose();
+
             Console.WriteLine("Press a key to exit.");
             Console.ReadKey(true);
+        }
+
+        public static IDictionary<string, object> GetComplexDictionary()
+        {
+            return new Dictionary<string, object>
+            {
+                {
+                    "property1", "WORKS!"
+                },
+                {
+                    "property2", 123
+                },
+                {
+                    "property3", new Dictionary<string, object>
+                    {
+                        { "subpropertie", "blah blah" }
+                    }
+                }
+            };
         }
     }
 }
