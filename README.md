@@ -1,6 +1,11 @@
 
 A Serilog sink that writes events to the [NewRelic Logs](https://docs.newrelic.com/docs/logs/new-relic-logs/get-started/introduction-new-relic-logs).
 
+## Deprecated
+
+Version 1.2.2 is the last version built from this repository.
+This repository will no longer be maintained. Please use [@ThiagoBarradas fork](https://github.com/ThiagoBarradas/serilog-sinks-newrelic-logs/) which adds support for .NET Core 3.1
+
 ## Getting started
 
 Optionally configure NewRelic settings:
