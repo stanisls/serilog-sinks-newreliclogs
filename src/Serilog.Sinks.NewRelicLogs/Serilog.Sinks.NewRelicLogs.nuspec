@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Serilog.Sinks.NewRelicLogs</id>
-    <version>1.2.0</version>
+    <version>1.2.2</version>
     <title>NewRelic Logs sink for Serilog</title>
     <authors>Stanislav Sokolov</authors>
     <license type="expression">Apache-2.0</license>
@@ -12,13 +12,13 @@
     <repository type="git" url="https://github.com/stanisls/serilog-sinks-newreliclogs.git" />
     <description>A Serilog sink that writes events to version 1 of the NewRelic Logs API.</description>
     <releaseNotes>
-      Improved handling of complex dictionary objects, by Thiago Barradas
+      Expose the optional FormatProvider of the sink. Update dependencies.
     </releaseNotes>
     <tags>serilog,logging,newrelic,log</tags>
     <dependencies>
       <group targetFramework="net452">
-        <dependency id="Serilog" version="2.9.0" />
-        <dependency id="Serilog.Sinks.PeriodicBatching" version="2.2.0" />
+        <dependency id="Serilog" version="2.10.0" />
+        <dependency id="Serilog.Sinks.PeriodicBatching" version="2.3.0" />
         <dependency id="Newtonsoft.Json" version="12.0.3" />
       </group>
     </dependencies>
