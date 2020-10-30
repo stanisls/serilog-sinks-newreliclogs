@@ -24,7 +24,13 @@ namespace Serilog.Sinks.NewRelicLogs
         public string InsertKey { get; }
         private IFormatProvider FormatProvider { get; }
 
-        public NewRelicLogsSink(string endpointUrl, string applicationName, string licenseKey, string insertKey, int batchSizeLimit, TimeSpan period, IFormatProvider formatProvider = null)
+        public NewRelicLogsSink(
+            string endpointUrl,
+            string applicationName,
+            string licenseKey, string insertKey,
+            int batchSizeLimit,
+            TimeSpan period,
+            IFormatProvider formatProvider = null)
             : base(batchSizeLimit, period)
         {
             EndpointUrl = endpointUrl;
@@ -193,7 +199,7 @@ namespace Serilog.Sinks.NewRelicLogs
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
             if (date == DateTime.MinValue) return 0;
 
-            return (long) (date - epoch).TotalMilliseconds;
+            return (long)(date - epoch).TotalMilliseconds;
         }
     }
 }
